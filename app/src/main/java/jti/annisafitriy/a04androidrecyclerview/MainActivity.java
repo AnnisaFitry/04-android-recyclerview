@@ -42,6 +42,17 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new WordListAdapter(this, mWordList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        FloatingActionButton fab2 = findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mWordList.clear();
+                for (int i = 0; i < 20; i++) {
+                    mWordList.addLast("Word " + i);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
