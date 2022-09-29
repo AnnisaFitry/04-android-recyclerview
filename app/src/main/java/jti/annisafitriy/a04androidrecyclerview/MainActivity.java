@@ -1,22 +1,22 @@
 package jti.annisafitriy.a04androidrecyclerview;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private final LinkedList<String> mWordList = new LinkedList<>();
     private RecyclerView mRecyclerView;
-    private WordListAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,34 +25,20 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int wordListSize = mWordList.size();
-                mWordList.addLast("+ Word " + wordListSize);
-                mRecyclerView.getAdapter().notifyItemInserted(wordListSize);
-                mRecyclerView.smoothScrollToPosition(wordListSize);
-            }
+        fab.setOnClickListener(view -> {
+            int wordListSize = mWordList.size();
+            mWordList.addLast("+ Word " + wordListSize);
+            Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(wordListSize);
+            mRecyclerView.smoothScrollToPosition(wordListSize);
         });
 
         for (int i = 0; i < 20; i++) {
             mWordList.addLast("Word " + i);
         }
         mRecyclerView = findViewById(R.id.recyclerview);
-        mAdapter = new WordListAdapter(this, mWordList);
+        WordListAdapter mAdapter = new WordListAdapter(this, mWordList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        FloatingActionButton fab2 = findViewById(R.id.fab2);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mWordList.clear();
-                for (int i = 0; i < 20; i++) {
-                    mWordList.addLast("Word " + i);
-                }
-                mAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
@@ -62,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -70,7 +57,12 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.reset) {
+            mWordList.clear();
+            for (int i = 0; i < 20; i++){
+                mWordList.addLast("Word " + i);
+            }
+            Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
             return true;
         }
 
