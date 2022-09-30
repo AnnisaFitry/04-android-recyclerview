@@ -27,7 +27,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_for_fab"
-        tools:ignore="ContentDescription" />
+        app:srcCompat="@drawable/ic_add_for_fab" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="90dp"
+        android:layout_marginRight="16dp"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

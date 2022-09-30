@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="jti.annisafitriy.a04androidrecyclerview.MainActivity">
     <item
-        android:id="@+id/reset"
+        android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/reset"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
