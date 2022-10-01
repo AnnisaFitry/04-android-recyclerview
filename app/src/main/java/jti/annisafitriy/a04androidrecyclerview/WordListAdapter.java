@@ -1,10 +1,13 @@
 package jti.annisafitriy.a04androidrecyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.LinkedList;
 
@@ -23,6 +26,7 @@ public class WordListAdapter extends
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
         }
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onClick(View view) {
             int mPosition = getLayoutPosition();
@@ -35,8 +39,9 @@ public class WordListAdapter extends
         mInflater = LayoutInflater.from(context);
         this.mWordList = wordList;
     }
+    @NonNull
     @Override
-    public WordListAdapter.WordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WordListAdapter.WordViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mItemView = mInflater.inflate(R.layout.wordlist_item, parent, false);
         return new WordViewHolder(mItemView, this);
     }
