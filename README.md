@@ -15,8 +15,10 @@
 ![](images/c1.jpeg)
 ![](images/c2.jpeg)
 
-# Fix Challenge 
-(tidak bisa dicommit source code nya, karena error)
+# Fix Challenge 1
 ![](images/cf1.jpeg)
 ![](images/cf2.jpeg)
 ![](images/cf3.jpeg)
+
+# Challenge 1
+![](images/ch2.jpeg)
