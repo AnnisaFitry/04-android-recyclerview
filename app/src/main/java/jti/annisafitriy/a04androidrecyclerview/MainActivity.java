@@ -1,72 +1,95 @@
 package jti.annisafitriy.a04androidrecyclerview;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import androidx.appcompat.widget.Toolbar;
+import android.os.Handler;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.LinkedList;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private final LinkedList<String> mWordList = new LinkedList<>();
-    private RecyclerView mRecyclerView;
+
+    RecyclerView recyclerView;
+    RecyclerViewAdapter recyclerViewAdapter;
+    ArrayList<String> rowsArrayList = new ArrayList<>();
+    boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            int wordListSize = mWordList.size();
-            mWordList.addLast("+ Word " + wordListSize);
-            Objects.requireNonNull(mRecyclerView.getAdapter()).notifyItemInserted(wordListSize);
-            mRecyclerView.smoothScrollToPosition(wordListSize);
+        recyclerView = findViewById(R.id.recyclerview);
+        populateData();
+        initAdapter();
+        initScrollListener();
+    }
+
+    private void populateData() {
+        int i = 0;
+        while (i < 10) {
+            rowsArrayList.add("Item " + i);
+            i++;
+        }
+    }
+
+    private void initAdapter() {
+
+        recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList);
+        recyclerView.setAdapter(recyclerViewAdapter);
+    }
+
+    private void initScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (!isLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == rowsArrayList.size() - 1) {
+                        //bottom of list!
+                        loadMore();
+                        isLoading = true;
+                    }
+                }
+            }
         });
 
-        for (int i = 0; i < 20; i++) {
-            mWordList.addLast("Word " + i);
-        }
-        mRecyclerView = findViewById(R.id.recyclerview);
-        WordListAdapter mAdapter = new WordListAdapter(this, mWordList);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    private void loadMore() {
+        rowsArrayList.add(null);
+        recyclerViewAdapter.notifyItemInserted(rowsArrayList.size() - 1);
 
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_reset) {
-            mWordList.clear();
-            for (int i = 0; i < 20; i++){
-                mWordList.addLast("Word " + i);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                rowsArrayList.remove(rowsArrayList.size() - 1);
+                int scrollPosition = rowsArrayList.size();
+                recyclerViewAdapter.notifyItemRemoved(scrollPosition);
+                int currentSize = scrollPosition;
+                int nextLimit = currentSize + 10;
+
+                while (currentSize - 1 < nextLimit) {
+                    rowsArrayList.add("Item " + currentSize);
+                    currentSize++;
+                }
+
+                recyclerViewAdapter.notifyDataSetChanged();
+                isLoading = false;
             }
-            Objects.requireNonNull(mRecyclerView.getAdapter()).notifyDataSetChanged();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        }, 2000);
     }
 }
