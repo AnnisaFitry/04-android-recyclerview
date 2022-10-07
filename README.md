@@ -22,3 +22,7 @@
 
 # Challenge 1
 ![](images/ch2.jpeg)
+
+# Homework
+![](images/hm1.jpeg)
+![](images/hm2.jpeg)
